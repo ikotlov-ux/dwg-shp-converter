@@ -18,6 +18,7 @@ CRS_WGS84 = "wgs84"
 CRS_MGGT = "mggt"
 CRS_MOSCOW_BESSEL_DGI = "moscow_bessel_dgi"
 CRS_MOSCOW_BESSEL_DGI_SHIFT = "moscow_bessel_dgi_shift"
+CRS_MSK_BORSHCHEVIK = "msk_borshchevik"
 CRS_CUSTOM = "custom"
 
 # Поддерживаемые входные и выходные форматы.

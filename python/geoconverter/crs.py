@@ -54,6 +54,16 @@ MOSCOW_BESSEL_DGI_SHIFT_PROJ = (
     "+units=m +no_defs"
 )
 
+# МСК Борщевика (локальная СК Москвы для выгрузок борщевика ДЗЗ / обращений):
+# поперечная Меркатора на эллипсоиде Красовского, центральный меридиан 37.5,
+# широта начала 0, ложные восток/север 1250000 / -1050000 + сдвиг СК-42 -> WGS84.
+MSK_BORSHCHEVIK_PROJ = (
+    "+proj=tmerc +lat_0=0 +lon_0=37.5 +k=1 "
+    "+x_0=1250000 +y_0=-1050000 +ellps=krass "
+    "+towgs84=23.57,-140.95,-79.8,0,0,0,0 "
+    "+units=m +no_defs"
+)
+
 # Порядок пресетов в выпадающих списках GUI. Ключ "custom" означает
 # пользовательскую PROJ-строку из поля ввода.
 CRS_PRESETS: dict[str, dict] = {
@@ -72,6 +82,10 @@ CRS_PRESETS: dict[str, dict] = {
     "moscow_bessel_dgi_shift": {
         "label": "Moscow_bessel ДГИ (смещение x=7.2, y=16.8)",
         "proj": MOSCOW_BESSEL_DGI_SHIFT_PROJ,
+    },
+    "msk_borshchevik": {
+        "label": "МСК Борщевика (x_0=1250000, y_0=-1050000)",
+        "proj": MSK_BORSHCHEVIK_PROJ,
     },
     "custom": {
         "label": "Пользовательская PROJ-строка",

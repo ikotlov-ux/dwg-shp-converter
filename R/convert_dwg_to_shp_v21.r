@@ -461,6 +461,17 @@ crs_moscow_bessel_dgi_shift <- function() {
             .MOSCOW_BESSEL_DGI_SHIFT_X, .MOSCOW_BESSEL_DGI_SHIFT_Y))
 }
 
+# Local Moscow CRS for hogweed ("МСК Борщевика", DZZ / citizen reports DXF):
+# Transverse Mercator on the Krassovsky ellipsoid, central meridian 37.5,
+# lat_0=0, false easting 1250000, false northing -1050000, SK-42 -> WGS84 datum shift.
+.MSK_BORSHCHEVIK_PROJ <- paste0(
+  "+proj=tmerc +lat_0=0 +lon_0=37.5 +k=1 ",
+  "+x_0=1250000 +y_0=-1050000 +ellps=krass ",
+  "+towgs84=23.57,-140.95,-79.8,0,0,0,0 +units=m +no_defs")
+crs_msk_borshchevik <- function() {
+  crs_proj(.MSK_BORSHCHEVIK_PROJ, "МСК Борщевика (x0=1250000, y0=-1050000)")
+}
+
 crs_describe <- function(spec) {
   if (is.null(spec)) return("<none>")
   spec$label %||% spec$value %||% spec$kind
@@ -585,7 +596,8 @@ choose_crs <- function(title, default_key = "wgs84", detected = NULL) {
     msk11pechdwg = crs_msk11_pechora_dwg(),
     msk11pechdwgn = crs_msk11_pechora_dwg_n2220(),
     mbdgi   = crs_moscow_bessel_dgi(),
-    mbdgishift = crs_moscow_bessel_dgi_shift()
+    mbdgishift = crs_moscow_bessel_dgi_shift(),
+    mskborsh = crs_msk_borshchevik()
   )
 
   has_det <- !is.null(detected)
@@ -602,7 +614,8 @@ choose_crs <- function(title, default_key = "wgs84", detected = NULL) {
   cat("[9] Moscow_bessel ДГИ (customer Bessel_Moscow, x0=0/y0=0, +towgs84)\n")
   cat(sprintf("[10] Moscow_bessel ДГИ (смещение x=%s, y=%s) (manual control-point correction)\n",
               .MOSCOW_BESSEL_DGI_SHIFT_X, .MOSCOW_BESSEL_DGI_SHIFT_Y))
-  cat("[11] Custom (EPSG code / PROJ string / WKT or .prj file path)\n")
+  cat("[11] МСК Борщевика (lon0=37.5, x0=1250000, y0=-1050000, krass, PROJ)\n")
+  cat("[12] Custom (EPSG code / PROJ string / WKT or .prj file path)\n")
 
   default_label <- switch(default_key,
     detected = if (has_det) crs_describe(detected) else presets$wgs84$label,
@@ -616,6 +629,7 @@ choose_crs <- function(title, default_key = "wgs84", detected = NULL) {
     msk11pechdwgn = presets$msk11pechdwgn$label,
     mbdgi   = presets$mbdgi$label,
     mbdgishift = presets$mbdgishift$label,
+    mskborsh = presets$mskborsh$label,
     presets$wgs84$label
   )
 
@@ -625,7 +639,7 @@ choose_crs <- function(title, default_key = "wgs84", detected = NULL) {
       detected = if (has_det) "D" else "1",
       wgs84 = "1", webmerc = "2", utm37 = "3", mggt = "4", msk11z5 = "5",
       msk11pech = "6", msk11pechdwg = "7", msk11pechdwgn = "8", mbdgi = "9",
-      mbdgishift = "10", "1")
+      mbdgishift = "10", mskborsh = "11", "1")
   }
   al <- tolower(ans)
 
@@ -644,7 +658,8 @@ choose_crs <- function(title, default_key = "wgs84", detected = NULL) {
   if (ans == "8") return(presets$msk11pechdwgn)
   if (ans == "9") return(presets$mbdgi)
   if (ans == "10") return(presets$mbdgishift)
-  if (ans == "11") {
+  if (ans == "11") return(presets$mskborsh)
+  if (ans == "12") {
     val <- trimws(readline(
       "Enter EPSG (e.g. 32638 or EPSG:32638), PROJ string, or path to .prj/.wkt file: "))
     return(classify_custom_crs(val))

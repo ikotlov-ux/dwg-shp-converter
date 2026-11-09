@@ -53,6 +53,23 @@ class TestProjStrings(unittest.TestCase):
             crs.MOSCOW_BESSEL_DGI_PROJ,
         )
 
+    def test_msk_borshchevik(self):
+        proj = crs.MSK_BORSHCHEVIK_PROJ
+        for token in (
+            "+proj=tmerc",
+            "+lat_0=0",
+            "+lon_0=37.5",
+            "+k=1",
+            "+x_0=1250000",
+            "+y_0=-1050000",
+            "+ellps=krass",
+            "+towgs84=23.57,-140.95,-79.8,0,0,0,0",
+            "+units=m",
+            "+no_defs",
+        ):
+            self.assertIn(token, proj, f"МСК Борщевика: отсутствует {token}")
+        self.assertIn("МСК Борщевика", crs.crs_label("msk_borshchevik"))
+
     def test_wgs84(self):
         self.assertEqual(crs.WGS84_PROJ, "EPSG:4326")
 
@@ -60,7 +77,7 @@ class TestProjStrings(unittest.TestCase):
 class TestResolveCrs(unittest.TestCase):
     def test_presets_resolve(self):
         for key in ("wgs84", "mggt", "moscow_bessel_dgi",
-                    "moscow_bessel_dgi_shift"):
+                    "moscow_bessel_dgi_shift", "msk_borshchevik"):
             self.assertTrue(crs.resolve_crs(key))
 
     def test_custom(self):
